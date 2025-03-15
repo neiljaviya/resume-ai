@@ -590,3 +590,91 @@ Once modules are individually developed:
 - AI model optimization
 - Performance optimization
 - Analytics and monitoring
+
+
+# Resume Tailoring System Blueprint - Updates and Notes
+
+This document contains updates, clarifications, and additional notes for the Resume Tailoring System blueprint based on the initial implementation work.
+
+## Last Updated: March 15, 2025
+
+## Architecture Updates
+
+The initial implementation has validated the core architecture described in the blueprint, with a few additional notes:
+
+### Backend Architecture
+- The modular approach with separate services for each domain (auth, resume, job, AI) has proven effective for maintaining clean separation of concerns.
+- Service layers effectively abstract business logic from API endpoints, making the code more maintainable and testable.
+- The Flask application factory pattern works well for initializing extensions and registering blueprints.
+
+### Database Schema
+- The current implementation has followed the blueprint database schema with minor adjustments:
+  - Added `file_type` and `file_size` fields to the Resume and ResumeVersion models for better file tracking
+  - Added `content` and `content_format` fields for storing structured resume data
+  - Added `changes` field to ResumeVersion to track modifications from base resume
+
+### AI Implementation
+- The two-tiered approach (rule-based + LLM) provides a good balance of reliability and advanced capabilities:
+  - Rule-based systems with spaCy and NLTK provide consistent baseline functionality
+  - OpenAI integration allows for more sophisticated tailoring when available
+  - Fallback mechanisms ensure the system works even if LLM services are unavailable
+
+## Development Process Adjustments
+
+### Module Development
+- The module isolation strategy has worked well for focused development sessions
+- The interface documents have been valuable for maintaining clear boundaries between modules
+- Services should be developed before API endpoints to ensure business logic is properly encapsulated
+
+### Testing Strategy
+- Add unit tests for service methods as the next priority
+- Implement integration tests for API endpoints
+- Create test fixtures for common test data (users, resumes, jobs)
+
+## Additional Requirements
+
+Based on the initial implementation, several additional requirements have been identified:
+
+### Storage Service
+- A dedicated StorageService needs to be implemented for file handling
+- Initially can use local filesystem, but should be designed for easy migration to S3 or other cloud storage
+- Should handle file uploads, downloads, and URL generation
+
+### Email Service
+- A proper EmailService should be implemented for sending verification emails and password resets
+- Should support templates for different email types
+- Should be configurable for different email providers
+
+### Document Processing
+- More robust document parsing for various resume formats (PDF, DOCX, etc.)
+- Consider using specialized libraries for each format or a unified document parsing service
+
+### Frontend Components
+- Implement a comprehensive component library with Tailwind CSS
+- Ensure all components have proper accessibility attributes
+- Create form components that integrate with React Hook Form and Zod validation
+
+## Next Phase Planning
+
+For the next phase of development, priorities should include:
+
+1. Complete the remaining service implementations
+   - JobService
+   - StorageService
+   - EmailService
+
+2. Develop core UI components and pages
+   - Common component library
+   - Registration and profile pages
+   - Resume editor and job input forms
+   - Dashboard with metrics
+
+3. Implement the subscription and billing module
+   - Stripe integration
+   - Usage tracking
+   - Plan management
+
+4. Add comprehensive testing
+   - Unit tests for services
+   - Integration tests for API endpoints
+   - End-to-end tests for critical flows
